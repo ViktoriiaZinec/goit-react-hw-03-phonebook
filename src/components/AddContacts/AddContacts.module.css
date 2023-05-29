@@ -1,0 +1,38 @@
+form {
+  display: block;
+  padding: 0 40px;
+  width: 100%;
+  color: rgb(18, 18, 19);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+form input {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  text-align: left;
+  padding: 10px;
+  margin-bottom: 20px;
+  outline-color: blue;
+  width: 23%;
+  height: 15px;
+  border: 1px solid rgb(129, 162, 255);
+  border-radius: 5px;
+}
+.btn_primary {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: blue;
+  width: 150px;
+  height: 40px;
+  color: white;
+  font-size: 16px;
+  transition: background-color cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.btn_primary:hover,
+.btn_primary:focus {
+  background-color: rgb(36, 74, 178);
+}

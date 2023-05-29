@@ -1,0 +1,22 @@
+.list {
+  list-style: none;
+  justify-content: space-between;
+  font-size: 20px;
+  line-height: 1.7;
+}
+.btnDelete {
+  outline: none;
+  margin-left: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid blue;
+  width: 100px;
+  height: 30px;
+  color: blue;
+  font-size: 16px;
+  transition: background-color cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.btnDelete:hover,
+.btnDelete:focus {
+  background-color: rgb(178, 178, 249);
+}
