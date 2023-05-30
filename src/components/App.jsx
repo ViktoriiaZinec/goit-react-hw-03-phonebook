@@ -14,15 +14,25 @@ export class App extends Component {
     ],
     filterName: '',
   };
-
+  //componentDidMount() відпрацьовує один раз після рендеру
   componentDidMount() {
+    //Отримуємо ключ ('contacts') до сховища
     const contacts = localStorage.getItem('contacts');
+    console.log('didMount');
     console.log('contacts :>> ', contacts);
+    //Якщо contacts існує, додаємо контакти в сховищею Якщо вони э,то використовуємо метод JSON.parse() для перетворення string даних (JSON) в об'єкт JavaScript , а потім встановлюємо  стан компоненту за допомогою методу setState(), щоб відобразити контакти в інтерфейсі.
     if (contacts) {
       this.setState({ contacts: JSON.parse(contacts) });
     }
   }
-  componentDidUpdate(prevProps, prevState) {
+  //componentDidUpdate відпрацьовує щоразу після оновлення prevState (або prevProps якби вони були в даному випадку)
+  //prevState.contacts - властивість contacts из попередього компонента.
+  // this.state.contacts - стан компоненту на даний момент.
+  // JSON.stringify(this.state.contacts) - перетворення об'єкту this.state.contacts в string JSON.
+  // localStorage.setItem('contacts', JSON.stringify(this.state.contacts)) - збереження строки JSON в локальному сховищі браузера під ключом 'contacts'.
+  // Таким чином, при кожній зміні стану компонента відбувається збереженняйого даних в localStorage.
+
+  componentDidUpdate(_, prevState) {
     console.log('did update');
     if (prevState.contacts !== this.state.contacts) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
