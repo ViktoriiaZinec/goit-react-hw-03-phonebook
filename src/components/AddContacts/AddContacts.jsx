@@ -8,6 +8,7 @@ export class AddContacts extends Component {
     name: '',
     number: '',
   };
+
   //Виносимо функцію  з рендеру і робимо метод, щоб кожен раз не викликалася нова функція
   // Name повинен співпадати з полем в state(
   // якщо в state name: 'email', то і в input name='email'
