@@ -4,7 +4,6 @@ import propTypes from 'prop-types';
 
 export class AddContacts extends Component {
   state = {
-    contacts: [],
     name: '',
     number: '',
   };
@@ -35,7 +34,6 @@ export class AddContacts extends Component {
     this.props.createUser(this.state.name, this.state.number);
     // Очищення форми після додавання контакту
     this.setState({
-      contacts: [],
       name: '',
       number: '',
     });

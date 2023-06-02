@@ -18,22 +18,22 @@ export class App extends Component {
   componentDidMount() {
     //Отримуємо ключ ('contacts') до сховища
     const contacts = localStorage.getItem('contacts');
-    console.log('didMount');
-    console.log('contacts :>> ', contacts);
-    //Якщо contacts існує, додаємо контакти в сховищею Якщо вони э,то використовуємо метод JSON.parse() для перетворення string даних (JSON) в об'єкт JavaScript , а потім встановлюємо  стан компоненту за допомогою методу setState(), щоб відобразити контакти в інтерфейсі.
+    // console.log('didMount');
+    // console.log('contacts :>> ', contacts);
+    //Якщо contacts існує, додаємо контакти в сховище. Якщо вони є,то використовуємо метод JSON.parse() для перетворення string даних (JSON) в об'єкт JavaScript , а потім встановлюємо  стан компоненту за допомогою методу setState(), щоб відобразити контакти в інтерфейсі.
     if (contacts) {
       this.setState({ contacts: JSON.parse(contacts) });
     }
   }
   //componentDidUpdate відпрацьовує щоразу після оновлення prevState (або prevProps якби вони були в даному випадку)
-  //prevState.contacts - властивість contacts из попередього компонента.
+  //prevState.contacts - властивість contacts із попередього компонента.
   // this.state.contacts - стан компоненту на даний момент.
   // JSON.stringify(this.state.contacts) - перетворення об'єкту this.state.contacts в string JSON.
   // localStorage.setItem('contacts', JSON.stringify(this.state.contacts)) - збереження строки JSON в локальному сховищі браузера під ключом 'contacts'.
-  // Таким чином, при кожній зміні стану компонента відбувається збереженняйого даних в localStorage.
+  // Таким чином, при кожній зміні стану компонента відбувається збереження його даних в localStorage.
 
   componentDidUpdate(_, prevState) {
-    console.log('did update');
+    // console.log('did update');
     if (prevState.contacts !== this.state.contacts) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
     }
@@ -45,17 +45,20 @@ export class App extends Component {
       number,
       id: nanoid(),
     };
-    for (const contact of this.state.contacts) {
-      if (
-        name.toLowerCase() === contact.name.toLowerCase() &&
-        number === contact.number
-      ) {
-        return alert(name + ' is already in contact list');
-      }
+    const isExist = (name, number, contacts) => {
+      return contacts.some(
+        contact =>
+          contact.name.toLowerCase() === name.toLowerCase() ||
+          contact.number === number
+      );
+    };
+
+    if (isExist(name, number, this.state.contacts)) {
+      return alert(name + ' is already in contact list');
     }
+
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newUser],
-      filterName: prevState.filterName,
     }));
   };
 
@@ -63,16 +66,14 @@ export class App extends Component {
     this.setState(prevState => {
       return {
         contacts: prevState.contacts.filter(contact => contact.id !== id),
-        filterName: prevState.filterName,
       };
     });
   };
 
   setFilter = filter => {
-    this.setState(prevState => {
+    this.setState(() => {
       return {
         filterName: filter,
-        contacts: prevState.contacts,
       };
     });
   };
