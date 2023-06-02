@@ -1,101 +1,82 @@
 import { Component } from 'react';
-import { AddContacts } from './AddContacts/AddContacts';
-import { nanoid } from 'nanoid';
-import { ContactsList } from './ContactsList/ContactsList';
-import { Filter } from './Filter/Filter';
+import css from './AddContacts.module.css';
+import propTypes from 'prop-types';
 
-export class App extends Component {
+export class AddContacts extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filterName: '',
-  };
-  //componentDidMount() відпрацьовує один раз після рендеру
-  componentDidMount() {
-    //Отримуємо ключ ('contacts') до сховища
-    const contacts = localStorage.getItem('contacts');
-    // console.log('didMount');
-    // console.log('contacts :>> ', contacts);
-    //Якщо contacts існує, додаємо контакти в сховище. Якщо вони є,то використовуємо метод JSON.parse() для перетворення string даних (JSON) в об'єкт JavaScript , а потім встановлюємо  стан компоненту за допомогою методу setState(), щоб відобразити контакти в інтерфейсі.
-    if (contacts) {
-      this.setState({ contacts: JSON.parse(contacts) });
-    }
-  }
-  //componentDidUpdate відпрацьовує щоразу після оновлення prevState (або prevProps якби вони були в даному випадку)
-  //prevState.contacts - властивість contacts із попередього компонента.
-  // this.state.contacts - стан компоненту на даний момент.
-  // JSON.stringify(this.state.contacts) - перетворення об'єкту this.state.contacts в string JSON.
-  // localStorage.setItem('contacts', JSON.stringify(this.state.contacts)) - збереження строки JSON в локальному сховищі браузера під ключом 'contacts'.
-  // Таким чином, при кожній зміні стану компонента відбувається збереження його даних в localStorage.
-
-  componentDidUpdate(_, prevState) {
-    // console.log('did update');
-    if (prevState.contacts !== this.state.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
-
-  createUser = (name, number) => {
-    const newUser = {
-      name,
-      number,
-      id: nanoid(),
-    };
-    const isExist = (name, number, contacts) => {
-      return contacts.some(
-        contact =>
-          contact.name.toLowerCase() === name.toLowerCase() ||
-          contact.number === number
-      );
-    };
-
-    if (isExist(name, number, this.state.contacts)) {
-      return alert(name + ' is already in contact list');
-    }
-
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, newUser],
-    }));
+    name: '',
+    number: '',
   };
 
-  deleteUser = id => {
-    this.setState(prevState => {
-      return {
-        contacts: prevState.contacts.filter(contact => contact.id !== id),
-      };
+  //Виносимо функцію  з рендеру і робимо метод, щоб кожен раз не викликалася нова функція
+  // Name повинен співпадати з полем в state(
+  // якщо в state name: 'email', то і в input name='email'
+  //
+  handleChange = ({ target }) => {
+    this.setState({
+      [target.name]: target.value,
     });
   };
+  //name у квадратних дужках бо це значення динамічне і зберігає  змінну
+  // Ідентичний запис з тим що нагорі, але потрібно
+  // handleChange(event) {
+  //   const { name, value } = event.target;
+  //   this.setState({
+  //     [name]: value,
+  //   });
+  //   // Показує попередній стан, бо setState працює асинхронно
+  //   console.log(this.state);
+  // }
 
-  setFilter = filter => {
-    this.setState(() => {
-      return {
-        filterName: filter,
-      };
+  handleSubmit = e => {
+    e.preventDefault();
+    // this.props.createUser(this.state);
+    this.props.createUser(this.state.name, this.state.number);
+    // Очищення форми після додавання контакту
+    this.setState({
+      name: '',
+      number: '',
     });
   };
-
+  //Контрольована форма - рендер залежить від state. Якщо захардкодити value='something', завжди буде something. Тому в value записуємо name зі state (value={this.state.name},value={this.state.number})
   render() {
-    // console.log('this render:>> ', this);
-    const filteredContacts = this.state.contacts.filter(contact =>
-      contact.name
-        .toLowerCase()
-        .startsWith(this.state.filterName.toLowerCase().trim())
-    );
     return (
-      <div>
-        <h1>Phonebook</h1>
-        <AddContacts createUser={this.createUser} />
-        <h2>Contacts</h2>
-        <Filter setFilter={this.setFilter} />
-        <ContactsList
-          contacts={filteredContacts}
-          deleteUser={this.deleteUser}
-        />
-      </div>
+      <form className={css.form} onSubmit={this.handleSubmit}>
+        <div className={css.form_name}>
+          <label htmlFor="input1" className={css.form_label}>
+            Name
+          </label>
+          <input
+            autoFocus
+            type="text"
+            name="name"
+            placeholder="Name"
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            required
+            onChange={this.handleChange}
+            value={this.state.name}
+          />
+          <input
+            type="tel"
+            name="number"
+            placeholder="Number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+            onChange={this.handleChange}
+            value={this.state.number}
+          />
+        </div>
+
+        <button type="submit" className={css.btn_primary}>
+          Add Contacts
+        </button>
+      </form>
     );
   }
 }
+
+AddContacts.propTypes = {
+  createUser: propTypes.func.isRequired,
+};
